@@ -8,8 +8,7 @@ import { Button } from "@/app/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "/dashboard";
+ 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
