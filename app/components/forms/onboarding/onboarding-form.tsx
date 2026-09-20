@@ -160,151 +160,130 @@ export function OnboardingForm() {
         </div>
       </div>
 
-      {step === 1 ? (
-        <section>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">
+      {
+        step === 1 ? (
+          <section>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">
             Your content
           </p>
 
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">
             What is your niche?
           </h1>
-
           <p className="mt-2 text-sm text-slate-500">
-            This helps us recommend ideas that feel relevant to you.
+            This helps us recommend ideas that are relevant to you.
           </p>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {nicheOptions.map((option) => (
-              <OptionButton
-                key={option.value}
-                option={option}
-                selected={niche === option.value}
-                onClick={() => selectSingleOption(option.value, setNiche)}
-              />
+              <OptionButton key={option.value}
+              option={option}
+              selected={niche === option.value}
+              onClick={() => selectSingleOption(option.value, setNiche)}/>
             ))}
-
-            <OptionButton
-              option={{ label: "Something else", value: "other" }}
-              selected={niche === "other"}
-              onClick={() => setNiche("other")}
-            />
+            <OptionButton option={{ label: "Something else", value: "other"}}
+            selected={niche === "other"}
+            onClick={() => setNiche("other")}/>
           </div>
-
-          {niche === "other" ? (
-            <input
-              autoFocus
+          {
+            niche === "other" ? (
+              <input autoFocus
               value={customNiche}
               onChange={(event) => setCustomNiche(event.target.value)}
               placeholder="Enter your niche"
-              className="mt-4 h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"
-            />
-          ) : null}
-        </section>
-      ) : null}
+              className="mt-4 h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"/>
 
+            ) : null
+          }
+          </section>
+        ) : null
+      }
       {step === 2 ? (
         <StepOptions
-          eyebrow="Your audience"
-          title="How large is your audience?"
-          description="Choose the range that best describes your current audience."
-          options={followerOptions}
-          selectedValue={followerRange}
-          onSelect={(value) => selectSingleOption(value, setFollowerRange)}
-        />
+        eyebrow="Your audience"
+        title="How large is your audience?"
+        description="Choose the range the best describes your current audience."
+        options={followerOptions}
+        selectedValue={followerRange}
+        onSelect={(value) => selectSingleOption(value, setFollowerRange)}/>
       ) : null}
+      {
+        step === 3 ? (
+         <StepOptions 
+         eyebrow="Your Stage"
+         title="Which best describes you?"
+         description="We will use this to tailor the level of your recommendations."
+         options={creatorOptions}
+         selectedValue={creatorType}
+         onSelect={(value) => selectSingleOption(value, setCreatorType)}/>  
+        ) : null}
+        {
+          step === 4 ? (
+            <MultiSelectStep
+            eyebrow="Your direction"
+            title="What are your main goals?"
+            description="Choose all that apply."
+            options={goalOptions}
+            selectedValues={goals}
+            onToggle={(value) => toggleOption(value, goals, setGoals)}/>
+          ) : null}
+          {step === 5 ? (
+            <MultiSelectStep
+            eyebrow="Your challenges"
+            title="What would you like help with?"
+            description="Goose all that apply."
+            options={struggleOptions}
+            selectedValues={struggles}
+            onToggle={(value) => toggleOption(value, struggles, setStruggles)}/>
+          ) : null}
 
-      {step === 3 ? (
-        <StepOptions
-          eyebrow="Your stage"
-          title="Which best describes you?"
-          description="We will use this to tailor the level of your recommendations."
-          options={creatorOptions}
-          selectedValue={creatorType}
-          onSelect={(value) => selectSingleOption(value, setCreatorType)}
-        />
-      ) : null}
-
-      {step === 4 ? (
-        <MultiSelectStep
-          eyebrow="Your direction"
-          title="What are your main goals?"
-          description="Choose all that apply."
-          options={goalOptions}
-          selectedValues={goals}
-          onToggle={(value) => toggleOption(value, goals, setGoals)}
-        />
-      ) : null}
-
-      {step === 5 ? (
-        <MultiSelectStep
-          eyebrow="Your challenges"
-          title="What would you like help with?"
-          description="Choose all that apply."
-          options={struggleOptions}
-          selectedValues={struggles}
-          onToggle={(value) => toggleOption(value, struggles, setStruggles)}
-        />
-      ) : null}
-
-      {error ? (
-        <p className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
-        </p>
-      ) : null}
-
-      <div className="mt-10 flex items-center justify-between gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={handleBack}
-          disabled={step === 1 || isSubmitting}
-        >
-          Back
-        </Button>
-
-        {step < totalSteps ? (
-          <Button
+          {error ? (
+            <p className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </p>
+          ) : null}
+          <div className="mt-10 flex items-center justify-between gap-3">
+            <Button 
             type="button"
-            onClick={handleNext}
-            disabled={!canContinue()}
-          >
-            Continue
-          </Button>
-        ) : (
-          <Button type="submit" disabled={!canContinue() || isSubmitting}>
-            {isSubmitting ? "Saving..." : "Finish onboarding"}
-          </Button>
-        )}
-      </div>
+            variant="ghost"
+            onClick={handleBack}
+            disabled={step === 1 || isSubmitting}>Back</Button>
+            {
+              step < totalSteps ? (
+                <Button type="button"
+                onClick={handleNext}
+                disabled={!canContinue()}>
+                  Continue
+                </Button>
+              ) : (
+                <Button type="submit" disabled={!canContinue() || isSubmitting}>
+                  {isSubmitting ? "Saving.." : "Finish onboarding"}
+                </Button>
+              )
+            }
+          </div>
     </form>
   );
 }
-
 function OptionButton({
   option,
   selected,
   onClick,
-}: {
+} : {
   option: SingleOption;
   selected: boolean;
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-2xl border p-4 text-left text-sm font-medium transition ${
-        selected
-          ? "border-orange-500 bg-orange-50 text-orange-700 ring-2 ring-orange-500/10"
-          : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 hover:bg-white"
-      }`}
-    >
-      {option.label}
-    </button>
+    <button type="button"
+    onClick={onClick}
+    className={`rounded-2xl border p-4 text-left text-sm font-medium transition ${
+      selected ? "border-orange-500 bg-orange-50 text-orange-700 ring-2 ring-orange-500/10"
+      : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 hover:bg-white"
+    }`}>{option.label}</button>
   );
 }
-
+ 
 function StepOptions({
   eyebrow,
   title,
@@ -313,39 +292,30 @@ function StepOptions({
   selectedValue,
   onSelect,
 }: {
-  eyebrow: string;
-  title: string;
-  description: string;
+  eyebrow: string,
+  title: string,
+  description: string,
   options: SingleOption[];
   selectedValue: string;
   onSelect: (value: string) => void;
 }) {
   return (
     <section>
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">
-        {eyebrow}
-      </p>
-
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">
-        {title}
-      </h1>
-
+      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">{eyebrow}</p>
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">{title}</h1>
       <p className="mt-2 text-sm text-slate-500">{description}</p>
-
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         {options.map((option) => (
-          <OptionButton
-            key={option.value}
-            option={option}
-            selected={selectedValue === option.value}
-            onClick={() => onSelect(option.value)}
-          />
+          <OptionButton 
+          key={option.value}
+          option={option}
+          selected={selectedValue === option.value}
+          onClick={() => onSelect(option.value)}/>
         ))}
       </div>
     </section>
   );
 }
-
 function MultiSelectStep({
   eyebrow,
   title,
@@ -363,26 +333,18 @@ function MultiSelectStep({
 }) {
   return (
     <section>
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">
-        {eyebrow}
-      </p>
-
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">
-        {title}
-      </h1>
-
+      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">{eyebrow}</p>
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">{title}</h1>
       <p className="mt-2 text-sm text-slate-500">{description}</p>
-
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         {options.map((option) => (
           <OptionButton
-            key={option.value}
-            option={option}
-            selected={selectedValues.includes(option.value)}
-            onClick={() => onToggle(option.value)}
-          />
+          key={option.value}
+          option={option}
+          selected={selectedValues.includes(option.value)}
+          onClick={() => onToggle(option.value)}/>
         ))}
       </div>
     </section>
-  );
+  )
 }

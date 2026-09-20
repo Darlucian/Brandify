@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { supabase } from "@/app/lib/supabase";
@@ -9,8 +8,6 @@ import { Button } from "@/app/components/ui/button";
 import { Separator } from "@/app/components/ui/seperator";
 
 export default function SignupPage() {
-  const router = useRouter();
-
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +17,7 @@ export default function SignupPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     setError("");
     setSuccessMessage("");
     setIsSubmitting(true);
@@ -40,88 +38,108 @@ export default function SignupPage() {
       setError(signUpError.message);
       return;
     }
-    
-  
 
-    setSuccessMessage("Account created successfully. You can now log in.");
-    router.push("/login");
+    setSuccessMessage(
+      "Account created successfully. Check your email to confirm your account before logging in."
+    );
   };
 
-  
   const handleGoogleSignIn = async () => {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: `${window.location.origin}/callback/sign-in`,
+    setError("");
+    setSuccessMessage("");
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/callback/sign-in`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
     }
-  });
-  if (error) {
-    setError(error.message)
-    
-  }
-}
+  };
 
   const handleXSignIn = async () => {
-  setError("");
+    setError("");
+    setSuccessMessage("");
 
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "twitter",
-    options: {
-      redirectTo: `${window.location.origin}/callback/sign-in`,
-    },
-  });
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "twitter",
+      options: {
+        redirectTo: `${window.location.origin}/callback/sign-in`,
+      },
+    });
 
-  if (error) {
-    setError(error.message);
-  }
-};
-
-
-
+    if (error) {
+      setError(error.message);
+    }
+  };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="mb-6">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-orange-500">
             Get started
           </p>
-          <h1 className="mt-2 text-2xl font-semibold text-gray-900">Create your account</h1>
+
+          <h1 className="mt-2 text-2xl font-semibold text-gray-900">
+            Create your account
+          </h1>
+
+          <p className="mt-2 text-sm text-gray-500">
+            Create your account to start building your creator workspace.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="fullName" className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="fullName"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Full name
             </label>
+
             <input
               id="fullName"
               type="text"
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
               required
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-orange-500 focus:bg-white"
+              autoComplete="name"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
+
             <input
               id="email"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-orange-500 focus:bg-white"
+              autoComplete="email"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
+
             <input
               id="password"
               type="password"
@@ -129,54 +147,86 @@ export default function SignupPage() {
               onChange={(event) => setPassword(event.target.value)}
               required
               minLength={6}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-orange-500 focus:bg-white"
+              autoComplete="new-password"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"
             />
+
+            <p className="mt-1.5 text-xs text-gray-500">
+              Use at least 6 characters.
+            </p>
           </div>
 
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-          {successMessage ? (
-            <p className="text-sm text-green-600">{successMessage}</p>
+          {error ? (
+            <p
+              role="alert"
+              className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
+            >
+              {error}
+            </p>
           ) : null}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account..." : "Sign up"}
+          {successMessage ? (
+            <div
+              role="status"
+              className="rounded-xl border border-green-200 bg-green-50 px-3 py-3 text-sm text-green-700"
+            >
+              <p>{successMessage}</p>
+
+              <Link
+                href="/login"
+                className="mt-2 inline-block font-semibold underline underline-offset-2 hover:text-green-800"
+              >
+                Go to login
+              </Link>
+            </div>
+          ) : null}
+
+          <Button
+            type="submit"
+            className="h-11 w-full rounded-xl"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Creating account..." : "Create account"}
           </Button>
         </form>
-        <div className="my-10 w-full p-2 relative">
-          <div className="bg-white p-3 absolute text-xs top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            OR CONTINUE WITH
+
+        <div className="relative my-8">
+          <div className="flex items-center gap-3">
+            <Separator className="flex-1 bg-gray-200" />
+            <span className="text-xs font-medium uppercase tracking-wider text-gray-400">
+              Or continue with
+            </span>
+            <Separator className="flex-1 bg-gray-200" />
           </div>
-          <Separator orientation="horizontal" className="bg-themeGray"/>
         </div>
-        <div className="w-full">
-          <div className="mt-4">
-            <Button type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleGoogleSignIn}>
-              Continue with Google
 
-            </Button>
-
-          </div>
-
-        <div className="mt-4">
+        <div className="space-y-3">
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="h-11 w-full rounded-xl"
+            onClick={handleGoogleSignIn}
+          >
+            Continue with Google
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 w-full rounded-xl"
             onClick={handleXSignIn}
           >
             Continue with X
           </Button>
         </div>
-        </div>
 
-
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
-            Login
+          <Link
+            href="/login"
+            className="font-medium text-orange-600 hover:text-orange-500"
+          >
+            Log in
           </Link>
         </p>
       </div>
