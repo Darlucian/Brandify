@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { Button } from "@/app/components/ui/button";
+import { Separator } from "@/app/components/ui/seperator";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -69,10 +70,11 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="mb-6">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-orange-500">
+          {/* <p className="text-sm font-medium uppercase tracking-[0.2em] text-orange-500">
             Welcome back
-          </p>
-          <h1 className="mt-2 text-2xl font-semibold text-gray-900">Login</h1>
+          </p> */}
+          <h1 className="mt-2 text-4xl font-bold text-gray-900 ">Brandify..</h1>
+          <h5 className="mt-2 text-base font-semibold">Login</h5>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,16 +114,22 @@ export default function LoginPage() {
             {isSubmitting ? "Logging in..." : "Login"}
           </Button>
         </form>
+    <div className="my-10 w-full relative p-3">
+        <div className=" p-3 absolute text-themeTextGray text-xs top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          OR CONTINUE WITH
+        </div>
+        <Separator orientation="horizontal" className="bg-themeGray" />
+      </div>
 
      <div className="w-full">
-           <div className="mt-4">
+           <div className="mt-4 w-32 m-auto">
           <Button
             type="button"
             variant="outline"
             className="w-full"
             onClick={handleGoogleSignIn}
           >
-            Continue with Google
+          Google
           </Button>
         </div>
         <div className="mt-4">
@@ -131,7 +139,7 @@ export default function LoginPage() {
     className="w-full"
     onClick={handleXSignIn}
      >
-    Continue with X
+   X
   </Button>
   </div>
      </div>

@@ -23,10 +23,10 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 
 const topNavItems = [
-  { href: "/", label: "Home" },
+  { href: "/", label: "Resources" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/profile/you", label: "Profile" },
+  { href: "/profile", label: "Services" },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

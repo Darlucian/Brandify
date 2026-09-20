@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { supabase } from "@/app/lib/supabase";
 import { Button } from "@/app/components/ui/button";
+import { Separator } from "@/app/components/ui/seperator";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -141,6 +142,12 @@ export default function SignupPage() {
             {isSubmitting ? "Creating account..." : "Sign up"}
           </Button>
         </form>
+        <div className="my-10 w-full p-2 relative">
+          <div className="bg-white p-3 absolute text-xs top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            OR CONTINUE WITH
+          </div>
+          <Separator orientation="horizontal" className="bg-themeGray"/>
+        </div>
         <div className="w-full">
           <div className="mt-4">
             <Button type="button"
