@@ -26,7 +26,7 @@ const topNavItems = [
   { href: "/", label: "Resources" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/profile", label: "Services" },
+  { href: "/src/discover", label: "Discover" },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -85,8 +85,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <section className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white">
+    <section className="min-h-screen bg-amber-50">
+      <header className="border-b border-gray-200">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center">
             <CircleIcon className="h-6 w-6 text-orange-500" />

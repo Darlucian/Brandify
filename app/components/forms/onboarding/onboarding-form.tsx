@@ -10,6 +10,14 @@ type SingleOption = {
   value: string;
 };
 
+type CreatorType = "new" | "growing" | "established" | "brand";
+type FollowerRange =
+  | "under_500"
+  | "500_1000"
+  | "1000_5000"
+  | "5000_10000"
+  | "over_10000";
+
 const nicheOptions: SingleOption[] = [
   { label: "Fashion", value: "fashion" },
   { label: "Fitness", value: "fitness" },
@@ -20,7 +28,7 @@ const nicheOptions: SingleOption[] = [
   { label: "Lifestyle", value: "lifestyle" },
 ];
 
-const followerOptions: SingleOption[] = [
+const followerOptions: { label: string; value: FollowerRange }[] = [
   { label: "Less than 500", value: "under_500" },
   { label: "500 - 1,000", value: "500_1000" },
   { label: "1,000 - 5,000", value: "1000_5000" },
@@ -60,7 +68,7 @@ export function OnboardingForm() {
   const [step, setStep] = useState(1);
   const [niche, setNiche] = useState("");
   const [customNiche, setCustomNiche] = useState("");
-  const [followerRange, setFollowerRange] = useState("");
+  const [followerRange, setFollowerRange] = useState<FollowerRange | "">("");
   const [creatorType, setCreatorType] = useState("");
   const [goals, setGoals] = useState<string[]>([]);
   const [struggles, setStruggles] = useState<string[]>([]);
@@ -122,14 +130,14 @@ export function OnboardingForm() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!canContinue()) {
+    if (!canContinue() || !followerRange) {
       return;
     }
 
     const saved = await submit({
       niche: selectedNiche,
       followerRange,
-      creatorType,
+      creatorType: creatorType as CreatorType,
       goals,
       struggles,
     });
@@ -205,7 +213,7 @@ export function OnboardingForm() {
         description="Choose the range the best describes your current audience."
         options={followerOptions}
         selectedValue={followerRange}
-        onSelect={(value) => selectSingleOption(value, setFollowerRange)}/>
+        onSelect={(value) => setFollowerRange(value as FollowerRange)}/>
       ) : null}
       {
         step === 3 ? (

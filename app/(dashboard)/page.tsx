@@ -1,129 +1,305 @@
-import { Button } from "@/app/components/ui/button"
-import { ArrowRight, CreditCard, Database } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowDown,
+  ArrowRight,
+  Check,
+  Lightbulb,
+  Sparkles,
+  PlayCircleIcon,
+  SendIcon,
+  HeartIcon,
+  MessageCircle,
+  BookmarkIcon,
+} from "lucide-react";
+import { PricingSection } from "@/src/pricing";
+const steps = [
+  {
+    number: "01",
+    title: "Tell us what you create",
+    description: "Share your niche, audience, and what you want your content to do.",
+  },
+  {
+    number: "02",
+    title: "Find your spark",
+    description: "Get specific hooks and formats to help you start creating.",
+  },
+  {
+    number: "03",
+    title: "Make it yours",
+    description: "Save ideas, post the ones you like, and keep your next idea close.",
+  },
+];
 
-export default function HomePage(){
-  return(
-    <main>
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-            <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
-              <h1 className="text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl md:text-6xl">
-                Your Branding Partner
-                <span className="block text-orange-500">To LevelUp Fast</span>
-              </h1>
-              <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                Launch your Brand and manage it in real-time with our powerful,
-                ready to use tools. Packed with modern technologies and 
-                essential integrations.
-              </p>
-              <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
-                <a href=""
-                target="">
-                  <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-lg rounded-full">
-                   Launch Now
-                   <ArrowRight className="ml-2 h-5 w-5"/>
-                  </Button>
+const features = [
+  {
+    eyebrow: "01 / PERSONALIZED",
+    title: "Ideas that start with you.",
+    description:
+      "Your niche, creator stage, and goals shape suggestions that are more relevant than a generic prompt list.",
+    note: "A hook that fits your niche",
+    color: "landing-note--yellow",
+    rotation: "-3deg",
+  },
+  {
+    eyebrow: "02 / PRACTICAL",
+    title: "A starting point, not homework.",
+    description:
+      "Each idea gives you a hook and a format direction, so you can move from thinking about content to making it.",
+    note: "One idea. One Banger. A clear next step.",
+    color: "landing-note--coral",
+    rotation: "2deg",
+  },
+  {
+    eyebrow: "03 / YOURS TO MANAGE",
+    title: "Keep the good ones close.",
+    description:
+      "Save ideas for later, dismiss what does not fit, and mark the posts you have made.",
+    note: "Saved you time spent on overthinking.",
+    color: "landing-note--pine",
+    rotation: "-2deg",
+  },
+];
 
-                </a>
-              </div>
-            </div>
-               <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
-                {/* terminal */}
-               </div>
-          </div>
+function StickyNote({
+  children,
+  className = "",
+  rotation = "0deg",
+  delay = "0s",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  rotation?: string;
+  delay?: string;
+}) {
+  return (
+    <article
+      className={`landing-note ${className}`}
+      style={
+        {
+          "--note-rotation": rotation,
+          "--note-delay": delay,
+        } as React.CSSProperties
+      }
+    >
+      {children}
+    </article>
+  );
+}
 
-        </div>
-      </section>
-      <section className="py-16 bg-white w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-3 lg:gap-8">
-            <div>
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
-                 <svg viewBox="0 0 24 24" className="h-6 w-6">
-                  <path
-                    fill="currentColor"
-                    d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"
-                  />
-                </svg>
-              </div>
-              <div className="mt-5">
-                <h2 className="text-lg font-medium text-gray-900">
-                  Fast Results
-                </h2>
-                <p className="mt-2 text-base text-gray-500">
-                  Leverage the power of modern web technologies for optimal
-                  performance and results.
-                </p>
+export default function HomePage() {
+  return (
+    <main className="landing-page">
+      <section className="landing-hero" aria-labelledby="landing-title">
+        <div className="landing-container landing-hero__grid">
+          <div className="landing-hero__copy">
+            <p className="landing-eyebrow">
+              For the creator with a dozen drafts
+            </p>
 
-              </div>
-            </div>
-            <div className="mt-10 lg:mt-0">
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
-                <Database className="h-6 w-6"/>
-              </div>
-              <div className="mt-5">
-                <h2 className="text-lg font-medium text-gray-900">
-                  Data Storage
-                </h2>
-                <p className="mt-2 text-base text-gray-500">
-                  Robust databse solution with an intuitive ORM for efficient data management and scalability.
-                </p>
+            <h1 id="landing-title" className="landing-display landing-hero__title">
+              Stop staring at a blank page before you post.
+            </h1>
 
-              </div>
-            </div>
-            <div className="mt-10 lg:mt-0">
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
-                <CreditCard className="h-6 w-6"/>
-              </div>
-              <div className="mt-5">
-                <h2 className="text-lg font-medium text-gray-900">
-                  Stripe Integration
-                </h2>
-                <p className="mt-2 text-base text-gray-500">
-                  Seamless payment processing and subscription management with
-                  industry leading stripe integration.
-                </p>
-              </div>
-            </div>
-          </div>
+            <p className="landing-lede">
+              Turn your niche and ambitions into thoughtful content ideas you
+              can make your own.
+            </p>
 
-        </div>
+            <div className="landing-actions">
+              <Link className="landing-button landing-button--primary" href="/signup">
+                Get your first ideas free
+                <ArrowRight aria-hidden="true" size={18} />
+              </Link>
 
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-                Ready to Launch your Brand?
-              </h2>
-              <p className="mt-3 max-w-3xl text-lg text-gray-500">
-                Our software provides everything you need to get your Brand up and running quickly.
-                Don't waste time on boilerplate - focus on what makes your product unique. 
-              </p>
-            </div>
-            <div className="mt-8 lg:mt-0 flex justify-center lg:justify-end">
-              <a href="">
-                <Button
-                size="lg"
-                variant="outline"
-                className="text-lg rounded-full">
-                  View Progress
-                  <ArrowRight className="ml-3 h-6 w-6" />
-                </Button>
+              <a className="landing-text-link" href="#how-it-works">
+                See how it works
+                <PlayCircleIcon aria-hidden="true" size={16} />
               </a>
             </div>
+
+           
+          </div>
+
+          <div
+            className="landing-board"
+            aria-label="Examples of creator content ideas"
+          >
+            <div className="landing-board__label">
+              <Sparkles aria-hidden="true" size={15} />
+              A little less blank-page energy
+            </div>
+
+            <StickyNote
+              className="landing-note--yellow landing-board__note landing-board__note--one"
+              rotation="-5deg"
+              delay="0.05s"
+            >
+              <span className="landing-note__eyebrow">A quick video</span>
+              <p>“The tiny habit that made me consistent again”</p>
+              <span className="landing-note__tag">Creator routines</span>
+            </StickyNote>
+
+            <StickyNote
+              className="landing-note--paper landing-board__note landing-board__note--two"
+              rotation="4deg"
+              delay="0.18s"
+            >
+              <span className="landing-note__eyebrow">Try a carousel</span>
+              <p>3 beginner mistakes I would avoid in your niche</p>
+              <span className="landing-note__tag">Share what you love better.</span>
+            </StickyNote>
+
+            <StickyNote
+              className="landing-note--coral landing-board__note landing-board__note--three"
+              rotation="-2deg"
+              delay="0.3s"
+            >
+              <span className="landing-note__eyebrow">A story to tell</span>
+              <p>The moment I realized my audience needed something different</p>
+            </StickyNote>
+
+            <StickyNote
+              className="landing-note--pine landing-board__note landing-board__note--four"
+              rotation="3deg"
+              delay="0.42s"
+            >
+              <Check aria-hidden="true" className="landing-note__check" size={17} />
+              <p>Ideas should feel like a beginning, not homework.</p>
+          
+              <span className="landing-note__tag">
+                <BookmarkIcon aria-hidden="true" size={13}/>Bookmark</span>
+            </StickyNote>
+
+            <span className="landing-board__spark landing-board__spark--one">✳</span>
+            <span className="landing-board__spark landing-board__spark--two">✳</span>
           </div>
         </div>
-
       </section>
- 
-    
+
+      <section className="landing-problem" aria-labelledby="problem-title">
+        <div className="landing-container landing-problem__inner">
+          <p className="landing-eyebrow landing-eyebrow--light">
+            The familiar loop
+          </p>
+          <h2 id="problem-title" className="landing-display">
+            Open app. Doomscroll. Close app. We Fix that.
+          </h2>
+          <p>
+            Making content takes enough energy already. Finding a starting
+            point should not be the hardest part.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="how-it-works"
+        className="landing-how"
+        aria-labelledby="how-title"
+      >
+        <div className="landing-container">
+          <div className="landing-section-heading">
+            <p className="landing-eyebrow">A small nudge goes a long way</p>
+            <h2 id="how-title" className="landing-display">
+              From “what do I post?” to “that one’s good.”
+            </h2>
+          </div>
+
+          <div className="landing-steps">
+            {steps.map((step) => (
+              <article className="landing-step" key={step.number}>
+                <span className="landing-step__number">{step.number}</span>
+                <h3 className="landing-display">{step.title}</h3>
+                <p>{step.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-features" aria-labelledby="features-title">
+        <div className="landing-container">
+          <div className="landing-section-heading landing-section-heading--center">
+            <p className="landing-eyebrow">
+              A creative sidekick, not a content factory
+            </p>
+            <h2 id="features-title" className="landing-display">
+              Make room for the ideas worth Gems.
+            </h2>
+          </div>
+
+          <div className="landing-feature-list">
+            {features.map((feature, index) => (
+              <article
+                className={`landing-feature ${
+                  index % 2 ? "landing-feature--reverse" : ""
+                }`}
+                key={feature.eyebrow}
+              >
+                <div className="landing-feature__note-wrap">
+                  <StickyNote
+                    className={feature.color}
+                    rotation={feature.rotation}
+                  >
+                    
+                    <span className="landing-note__eyebrow">
+                      {feature.eyebrow}
+                    </span>
+                     
+                    <p>{feature.note}</p>
+                   <span className="landing-note__scribble">
+                        <HeartIcon aria-hidden="true" size={10}/>
+                      <MessageCircle aria-hidden="true" size={10}/>
+                      <SendIcon aria-hidden="true" size={10}/> 
+                    </span>
+                  </StickyNote>
+                </div>
+
+                <div className="landing-feature__copy">
+                  <p className="landing-eyebrow">{feature.eyebrow}</p>
+                  <h3 className="landing-display">{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+      <PricingSection/>
+
+      <section className="landing-cta" aria-labelledby="cta-title">
+        <div className="landing-container landing-cta__inner">
+          <div>
+            <p className="landing-eyebrow landing-eyebrow--light">
+              Your next post starts somewhere
+            </p>
+            <h2 id="cta-title" className="landing-display">
+              Let’s find your first idea.
+            </h2>
+          </div>
+
+          <Link className="landing-button landing-button--paper" href="/signup">
+            Get started free
+            <ArrowRight aria-hidden="true" size={18} />
+          </Link>
+        </div>
+      </section>
+      
+
+      <footer className="landing-footer">
+        <div className="landing-container landing-footer__inner">
+          <div>
+            <p className="landing-footer__brand">Brandify<span>.</span></p>
+            <p>A thoughtful start for your next good idea.</p>
+          </div>
+
+          <nav className="landing-footer__links" aria-label="Footer">
+            <Link href="/signup">Get started</Link>
+            <Link href="/login">Log in</Link>
+            <Link href="/dashboard">Dashboard</Link>
+            <a href="#how-it-works">How it works</a>
+          </nav>
+        </div>
+      </footer>
     </main>
   );
 }

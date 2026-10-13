@@ -65,7 +65,7 @@ export default function SignupPage() {
     setSuccessMessage("");
 
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: "twitter",
+      provider: "x",
       options: {
         redirectTo: `${window.location.origin}/callback/sign-in`,
       },
