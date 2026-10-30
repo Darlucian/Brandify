@@ -29,9 +29,12 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isProtectedRoute = request.nextUrl.pathname.startsWith("/resources");
+  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isPublicPaymentRoute =
+    request.nextUrl.pathname === "/pricing/verify" ||
+    request.nextUrl.pathname === "/dashboard/pricing/verify";
 
-  if (isProtectedRoute && !user) {
+  if (isProtectedRoute && !isPublicPaymentRoute && !user) {
     const redirectUrl = new URL("/login", request.url);
     redirectUrl.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);

@@ -42,7 +42,6 @@ export async function IdeasFeed() {
     .from("ideas")
     .select("*")
     .eq("user_id", user.id)
-    .eq("status", "suggested")
     .order("created_at", { ascending: false });
 
   if (error) {

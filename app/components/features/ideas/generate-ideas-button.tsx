@@ -1,22 +1,63 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowUpRight, ChevronDown, Sparkles } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/app/components/ui/button";
-// every ai can write a post, what if one can detect if you have no idea on what to post
-// then asks for your kind of person/personality and tailors post inline with who you are so it looks personalized
-// and then if you know what to post but notnow to put it, it asks for a background story of what's going on and 
-// stuff surrounding it and creates a post with a touch of storyline and drives the point
-// also users can choose between post being professional, storylike, brandlike, etc
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
+import { motion, useReducedMotion } from "framer-motion";
+
+const platformOptions = [
+  { value: "all", label: "All platforms" },
+  { value: "instagram", label: "Instagram" },
+  { value: "tiktok", label: "TikTok" },
+  { value: "youtube", label: "YouTube" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "x", label: "X" },
+];
+
+const promptSuggestions = [
+  {
+    label: "I’m out of ideas",
+    prompt: "I’m not sure what to post. Give me fresh ideas that fit my niche and goals.",
+  },
+  {
+    label: "Make it story-led",
+    prompt: "Help me turn a recent experience into a relatable story-led post with a clear point.",
+  },
+  {
+    label: "Keep it professional",
+    prompt: "Suggest a useful, professional post that demonstrates my expertise without sounding salesy.",
+  },
+  {
+    label: "Share behind the scenes",
+    prompt: "Give me an authentic behind-the-scenes post idea that helps my audience connect with me.",
+  },
+];
+ 
 
 export function GenerateIdeasButton() {
+  const router = useRouter();
+  const prefersReducedMotion = useReducedMotion();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [platform, setPlatform] = useState("all");
 
+  const selectedPlatform =
+    platformOptions.find((option) => option.value === platform)?.label ??
+    "All platforms";
+
   const handleGenerate = async () => {
     setIsGenerating(true);
-    setError(null);
 
     try {
       const response = await fetch("/api/ideas/generate", {
@@ -31,69 +72,128 @@ export function GenerateIdeasButton() {
       });
 
       if (!response.ok) {
-        const payload = await response.json();
-        throw new Error(payload.error || "Failed to generate ideas");
+        const payload = (await response.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+
+        throw new Error(payload?.error ?? "Could not generate ideas. Please try again.");
       }
 
-      window.location.reload();
-    } catch (generateError) {
-      setError(
-        generateError instanceof Error
-          ? generateError.message
-          : "Failed to generate ideas"
-      );
+      toast.success("Ideas are ready", {
+        description: "Your new ideas have been added to the idea feed.",
+      });
+
+      router.refresh();
+    } catch (error) {
+      toast.error("Could not generate ideas", {
+        description:
+          error instanceof Error ? error.message : "Please try again.",
+      });
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div className="space-y-3">
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        {/* <label className="mb-2 block text-sm font-medium text-slate-700">
-          What kind of content do you want?
-        </label> */}
+    <motion.section
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: prefersReducedMotion ? 0 : 0.25,
+        ease: "easeOut",
+      }}
+      className="rounded-xl border border-[#B4B0AE]/50 bg-white p-4 shadow-sm sm:p-5"
+    >
+      <div className="flex items-start gap-3">
+        <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#E0431F]/10 text-[#E0431F]">
+          <Sparkles aria-hidden="true" className="size-4" />
+        </span>
 
-        <textarea
-          value={prompt}
-          onChange={(event) => setPrompt(event.target.value)}
-          placeholder="I want ideas for a short TikTok series about beauty routines for busy mothers..."
-          className="min-h-110px w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"
-        />
-
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="w-full sm:max-w-220px">
-            <label className="mb-1 block text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
-              Platform
-            </label>
-
-            <select
-              value={platform}
-              onChange={(event) => setPlatform(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-500/10"
-            >
-              <option value="all">All platforms</option>
-              <option value="instagram">Instagram</option>
-              <option value="tiktok">TikTok</option>
-              <option value="youtube">YouTube</option>
-              <option value="linkedin">LinkedIn</option>
-              <option value="x">X</option>
-            </select>
-          </div>
-
-          <Button
-            onClick={handleGenerate}
-            disabled={isGenerating}
-            className="w-full sm:w-auto"
-          >
-            {isGenerating ? "Generating..." : "Generate ideas"}
-          </Button>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-medium text-[#241C1C]">
+            What would you like to create?
+          </h2>
+          <p className="mt-1 text-sm leading-5 text-[#6B5F5A]">
+            Add a little context, or choose a starting point.
+          </p>
         </div>
       </div>
 
-      {error ? (
-        <p className="text-sm text-red-600">{error}</p>
-      ) : null}
-    </div>
+      <label htmlFor="idea-prompt" className="sr-only">
+        Describe the content you want ideas for
+      </label>
+      <textarea
+        id="idea-prompt"
+        value={prompt}
+        onChange={(event) => setPrompt(event.target.value)}
+        maxLength={500}
+        placeholder="A topic, moment, audience question, or goal..."
+        className="mt-4 min-h-24 w-full resize-y rounded-lg border border-[#B4B0AE]/50 bg-[#FBF8F4] px-3 py-3 text-sm leading-6 text-[#241C1C] outline-none transition placeholder:text-[#6B5F5A]/75 focus:border-[#1B4B43] focus:bg-white focus:ring-2 focus:ring-[#1B4B43]/10"
+      />
+
+      <div className="mt-3">
+        <p className="mb-2 text-xs font-medium text-[#6B5F5A]">
+          Try a direction
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {promptSuggestions.map((suggestion) => (
+            <button
+              key={suggestion.label}
+              type="button"
+              onClick={() => setPrompt(suggestion.prompt)}
+              disabled={isGenerating}
+              className="rounded-full border border-[#B4B0AE]/50 bg-white px-3 py-1.5 text-xs font-medium text-[#6B5F5A] transition hover:border-[#1B4B43]/50 hover:bg-[#1B4B43]/[0.04] hover:text-[#1B4B43] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1B4B43] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {suggestion.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-3 border-t border-[#B4B0AE]/30 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-between border-[#B4B0AE]/50 bg-white text-[#241C1C] sm:w-auto sm:min-w-40"
+              disabled={isGenerating}
+            >
+              <span className="truncate">{selectedPlatform}</span>
+              <ChevronDown aria-hidden="true" className="ml-2 size-4 text-[#6B5F5A]" />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuLabel>Choose a platform</DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              value={platform}
+              onValueChange={setPlatform}
+            >
+              {platformOptions.map((option) => (
+                <DropdownMenuRadioItem
+                  key={option.value}
+                  value={option.value}
+                >
+                  {option.label}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button
+          type="button"
+          onClick={handleGenerate}
+          disabled={isGenerating}
+          className="w-full gap-2 bg-[#1B4B43] text-white hover:bg-[#153D36] sm:w-auto"
+        >
+          <span>{isGenerating ? "Generating..." : "Generate ideas"}</span>
+          {!isGenerating ? (
+            <ArrowUpRight aria-hidden="true" className="size-4" />
+          ) : null}
+        </Button>
+      </div>
+    </motion.section>
   );
 }

@@ -25,7 +25,7 @@ import {
 const topNavItems = [
   { href: "/", label: "Resources" },
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/dashboard/pricing", label: "Pricing" },
   { href: "/src/discover", label: "Discover" },
 ];
 
@@ -167,7 +167,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
                   <DropdownMenuItem asChild>
                     <Link
-                      href="/pricing"
+                      href="/dashboard/pricing"
                       className="flex cursor-pointer items-center gap-2"
                     >
                       <Settings className="h-4 w-4" />

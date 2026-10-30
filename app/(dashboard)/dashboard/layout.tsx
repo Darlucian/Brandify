@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Compass, BookCopyIcon, Shield, Menu, SettingsIcon, CircleDollarSign, SparklesIcon } from "lucide-react";
+import { LayoutDashboard, Compass, BookCopyIcon, Shield, Menu, SettingsIcon, CircleDollarSign, SparklesIcon, ChartBar, ChartLine } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
   { href: "/dashboard/discover", icon: Compass, label: "Discover" },
+   { href: "/dashboard/analytics", icon: ChartLine, label: "Analytics" },
   { href: "/dashboard/templates", icon: BookCopyIcon, label: "Templates" },
   { href: "/dashboard/security", icon: Shield, label: "Integrations" },
   { href: "/dashboard/pricing", icon: CircleDollarSign, label: "Pricing"},
