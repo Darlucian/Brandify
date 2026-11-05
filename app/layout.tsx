@@ -13,10 +13,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = 
+process.env.NEXT_PUBLIC_APP_URL ?? "https://brandify-jade-vercel-app";
+
 export const metadata: Metadata = {
-  title: "Brandify",
-  description: "A tool for creators who feel stuck in their content creation journey. Brandify helps you generate content ideas, create content, and manage your content all in one place.",
+  metadataBase:new URL(siteUrl),
+  title: {
+    default: "Brandify",
+    template: "%s | Brandify",
+  },
+  description: "Create, organize, and manage personlized content ideas for your brand.",
   verification: { google: "Ys_N2WVFKsiFumAnme99I-4CT02iLqZl6uiNjLfZdOE" },
+
+  openGraph: {
+    type: "website",
+    locale: "en_us",
+    url: "/",
+    siteName: "Brandify",
+    title: "Brandify",
+    description: 
+    "Create, organize, and manage personlized content ideas for your brand.",
+    images: [
+      {
+        url: "/brandify-og.png",
+        width: 1200,
+        height: 630,
+        alt: "Brandify",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Brandify",
+    description:
+    "Create, organize, and manage personlized content ideas for your brand.",
+    images: ["/brandify-og.png"],
+  },
 };
 
 export const viewport: Viewport = {

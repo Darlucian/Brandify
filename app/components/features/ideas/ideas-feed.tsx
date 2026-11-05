@@ -6,7 +6,11 @@ import { CircleHelpIcon } from "lucide-react";
 // We need some kind of scroll behavior of the idea card as the name suggests.
 // Unless the idea card does something different we can make do if possible
 
-export async function IdeasFeed() {
+type IdeasFeedProps = {
+  limit?: number;
+};
+
+export async function IdeasFeed({ limit }: IdeasFeedProps) {
   const cookieStore = await cookies();
 
   const supabase = createServerClient(
@@ -38,11 +42,17 @@ export async function IdeasFeed() {
     ) 
   }
 
-  const { data: ideas, error } = await supabase
+  let ideasQuery = supabase
     .from("ideas")
     .select("*")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
+
+  if (limit) {
+    ideasQuery = ideasQuery.limit(limit);
+  }
+
+  const { data: ideas, error } = await ideasQuery;
 
   if (error) {
     throw new Error(error.message);

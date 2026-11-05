@@ -153,7 +153,7 @@ export default async function DashboardPage() {
               </h2>
             </div>
           </div>
-          <IdeasFeed />
+          <IdeasFeed limit={2} />
         </section>
       </div>
     </main>
